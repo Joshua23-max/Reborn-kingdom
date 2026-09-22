@@ -2,15 +2,20 @@ import express from "express";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import { GoogleGenAI } from "@google/genai";
+import OpenAI from "openai";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY
+const openai = new OpenAI({
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY,
+  defaultHeaders: {
+    "HTTP-Referer": "http://localhost:3000",
+    "X-Title": "Reborn Kingdom",
+  },
 });
 
 app.use(express.json());
@@ -30,19 +35,16 @@ const characters = {
     personality:
       "Kind, curious, brave and intelligent. She is protective of the player and fascinated by their mysterious origins."
   },
-
   knight: {
     name: "Sir Kael",
     personality:
       "Serious, loyal and cautious. He distrusts strangers but respects courage and honesty."
   },
-
   mage: {
     name: "Liora",
     personality:
       "A clever young mage who loves discovering ancient magic. She is playful but extremely knowledgeable."
   },
-
   goblin: {
     name: "Grim",
     personality:
@@ -60,8 +62,7 @@ app.post("/api/chat", async (req, res) => {
       });
     }
 
-    const selected =
-      characters[character] || characters.elara;
+    const selected = characters[character] || characters.elara;
 
     const systemPrompt = `
 You are the AI narrator and game master of an interactive fantasy adventure.
@@ -119,28 +120,25 @@ Instead, naturally leave room for the player to respond.
 Respond as the selected character and/or narrator when appropriate.
 `;
 
-    const conversation = history
-      .slice(-20)
-      .map(item => `${item.role}: ${item.content}`)
-      .join("\n");
+    const messages = [
+      { role: "system", content: systemPrompt },
+      ...history.slice(-20).map(item => ({
+        role: item.role === "assistant" ? "assistant" : "user",
+        content: item.content
+      })),
+      { role: "user", content: message }
+    ];
 
-    const prompt = `
-${systemPrompt}
-
-PREVIOUS CONVERSATION:
-${conversation}
-
-PLAYER:
-${message}
-`;
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.8-flash",
-      contents: prompt
+    const completion = await openai.chat.completions.create({
+      model: "google/gemma-4-31b-it:free",
+      messages,
+      temperature: 0.85,
+      max_tokens: 800
     });
 
     const reply =
-      response.text || "The world falls strangely silent...";
+      completion.choices[0]?.message?.content ||
+      "The world falls strangely silent...";
 
     res.json({
       reply,
