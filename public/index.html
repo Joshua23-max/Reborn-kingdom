@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Reborn: Kingdom of Eldoria</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="app">
+
+    <header>
+      <div>
+        <h1>⚔️ REBORN</h1>
+        <p>Kingdom of Eldoria</p>
+      </div>
+
+      <button id="clearBtn">↻ New Adventure</button>
+    </header>
+
+    <main>
+
+      <aside class="characters">
+
+        <h2>Characters</h2>
+
+        <button class="character active" data-character="elara">
+          👑
+          <span>
+            <strong>Princess Elara</strong>
+            <small>Princess of Eldoria</small>
+          </span>
+        </button>
+
+        <button class="character" data-character="knight">
+          ⚔️
+          <span>
+            <strong>Sir Kael</strong>
+            <small>Royal Knight</small>
+          </span>
+        </button>
+
+        <button class="character" data-character="mage">
+          🪄
+          <span>
+            <strong>Liora</strong>
+            <small>Mage</small>
+          </span>
+        </button>
+
+        <button class="character" data-character="goblin">
+          👹
+          <span>
+            <strong>Grim</strong>
+            <small>Goblin</small>
+          </span>
+        </button>
+
+      </aside>
+
+      <section class="chat">
+
+        <div class="location">
+          🌲 Forest of Eldoria
+        </div>
+
+        <div id="messages" class="messages">
+
+          <div class="message npc">
+            <div class="avatar">👑</div>
+
+            <div>
+              <div class="name">Princess Elara</div>
+
+              <p>
+                You slowly open your eyes.
+              </p>
+
+              <p>
+                Cold grass presses against your back.
+                Giant trees surround you, and you have no idea
+                where you are.
+              </p>
+
+              <p>
+                Suddenly, you hear horses approaching.
+              </p>
+
+              <p>
+                A group of knights emerges from the forest.
+                At the center of them rides a young princess.
+              </p>
+
+              <p>
+                She stops when she sees you.
+              </p>
+
+              <p>
+                <em>
+                  "Who are you...?"
+                </em>
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="typing" id="typing">
+          Thinking...
+        </div>
+
+        <form id="chatForm">
+
+          <input
+            id="messageInput"
+            type="text"
+            placeholder="Say something..."
+            autocomplete="off"
+          >
+
+          <button type="submit">
+            ➤
+          </button>
+
+        </form>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
