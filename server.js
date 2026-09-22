@@ -13,7 +13,7 @@ const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.OPENROUTER_API_KEY,
   defaultHeaders: {
-    "HTTP-Referer": "http://localhost:3000",
+    "HTTP-Referer": "https://your-project.vercel.app", // change later if you want
     "X-Title": "Reborn Kingdom",
   },
 });
@@ -23,7 +23,8 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(express.static(path.join(__dirname, "public")));
+// Note: express.static is ignored on Vercel.
+// Files in the /public folder are automatically served by Vercel CDN.
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
@@ -147,13 +148,18 @@ Respond as the selected character and/or narrator when appropriate.
 
   } catch (error) {
     console.error(error);
-
     res.status(500).json({
       error: "The kingdom's magic failed to respond. Check your API configuration."
     });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Reborn Kingdom running on port ${PORT}`);
-});
+// For local development
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`Reborn Kingdom running on port ${PORT}`);
+  });
+}
+
+// Required for Vercel
+export default app;
